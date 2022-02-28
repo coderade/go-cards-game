@@ -3,7 +3,8 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
-	"strings"
+	"os"
+	strings "strings"
 )
 
 type deck []string
@@ -39,4 +40,18 @@ func (d deck) toString() string {
 
 func (d deck) saveToFile(fileName string) error {
 	return ioutil.WriteFile(fileName, []byte(d.toString()), 0666)
+}
+
+func newDeckFromFile(filename string) deck {
+	bs, err := ioutil.ReadFile(filename)
+
+	if err != nil {
+		// Option #1 - Log the error and call to newDeck()
+		// Option #2 - Log the error and entirely quit the program
+		fmt.Println("Error while reading the deck from file:", filename, err)
+		os.Exit(1)
+	}
+
+	s := strings.Split(string(bs), ",")
+	return s
 }
